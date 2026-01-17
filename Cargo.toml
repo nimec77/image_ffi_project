@@ -4,4 +4,4 @@ members = [
     "mirror_plugin",
     "blur_plugin",
 ]
-resolver = "2"
+resolver = "3"

@@ -160,7 +160,7 @@ None - all requirements are clearly defined in the phase documentation and visio
 
 ## References
 
-- `/Users/comrade77/RustroverProjects/image_ffi_project/docs/idea.md` - Full project requirements
-- `/Users/comrade77/RustroverProjects/image_ffi_project/docs/vision.md` - Technical architecture and design
-- `/Users/comrade77/RustroverProjects/image_ffi_project/docs/conventions.md` - Code conventions
-- `/Users/comrade77/RustroverProjects/image_ffi_project/docs/phase/phase-1.md` - Iteration 1 task list
+- `docs/idea.md` - Full project requirements
+- `docs/vision.md` - Technical architecture and design
+- `docs/conventions.md` - Code conventions
+- `docs/phase/phase-1.md` - Iteration 1 task list

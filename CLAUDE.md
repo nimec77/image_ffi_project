@@ -13,6 +13,8 @@ cargo build                    # Build all (app + plugins)
 cargo test                     # Run all tests
 cargo test -p mirror_plugin    # Test specific plugin
 cargo test -p blur_plugin
+cargo fmt                      # Format code
+cargo clippy -- -D warnings    # Lint with warnings as errors
 ```
 
 ## Run Commands
@@ -30,13 +32,16 @@ RUST_LOG=debug ./target/debug/image_processor ...
 
 ## Architecture
 
-```
-image_processor/src/
-├── main.rs           # CLI args (clap), image I/O (image crate)
-└── plugin_loader.rs  # FFI loading (libloading), ALL unsafe code here
+Cargo workspace with 3 crates:
 
-mirror_plugin/src/lib.rs   # cdylib: horizontal/vertical flip
-blur_plugin/src/lib.rs     # cdylib: weighted average blur
+```
+Cargo.toml                     # Workspace root
+image_processor/src/
+├── main.rs                    # CLI args (clap), image I/O (image crate)
+└── plugin_loader.rs           # FFI loading (libloading), ALL unsafe code here
+
+mirror_plugin/src/lib.rs       # cdylib: horizontal/vertical flip
+blur_plugin/src/lib.rs         # cdylib: weighted average blur
 ```
 
 **Data flow**: PNG → RgbaImage → Vec<u8> → plugin modifies in-place → save PNG
@@ -66,3 +71,4 @@ See `docs/conventions.md` for complete rules. Key points:
 - `docs/idea.md` - Requirements and pre-submission checklist
 - `docs/vision.md` - Technical architecture and detailed design
 - `docs/conventions.md` - Code conventions and rules
+- `docs/workflow.md` - AI-driven feature development workflow and slash commands

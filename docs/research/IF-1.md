@@ -203,8 +203,8 @@ For IF-1 implementation, ensure:
 
 ## References
 
-- `/Users/comrade77/RustroverProjects/image_ffi_project/docs/idea.md` - Full project requirements
-- `/Users/comrade77/RustroverProjects/image_ffi_project/docs/vision.md` - Technical architecture
-- `/Users/comrade77/RustroverProjects/image_ffi_project/docs/conventions.md` - Code conventions
-- `/Users/comrade77/RustroverProjects/image_ffi_project/docs/phase/phase-1.md` - Iteration 1 tasks
-- `/Users/comrade77/RustroverProjects/image_ffi_project/docs/prd/IF-1.prd.md` - PRD for this ticket
+- `docs/idea.md` - Full project requirements
+- `docs/vision.md` - Technical architecture
+- `docs/conventions.md` - Code conventions
+- `docs/phase/phase-1.md` - Iteration 1 tasks
+- `docs/prd/IF-1.prd.md` - PRD for this ticket

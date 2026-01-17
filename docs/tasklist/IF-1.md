@@ -1,6 +1,6 @@
 # Tasklist: IF-1 - Iteration 1: Project Setup
 
-**Status:** TASKLIST_READY
+**Status:** COMPLETED
 
 ## Context
 
@@ -12,9 +12,9 @@ Set up the Cargo workspace scaffolding for the Image FFI Project. This iteration
 
 ### Task 1: Create Workspace Root `Cargo.toml`
 
-- [ ] Create `/Cargo.toml` at project root with workspace definition
-  - [ ] Define `[workspace]` section with resolver = "2"
-  - [ ] List all three members: `image_processor`, `mirror_plugin`, `blur_plugin`
+- [x] Create `/Cargo.toml` at project root with workspace definition
+  - [x] Define `[workspace]` section with resolver = "2"
+  - [x] List all three members: `image_processor`, `mirror_plugin`, `blur_plugin`
 
 **Acceptance Criteria:**
 1. File `/Cargo.toml` exists with `[workspace]` section containing all three members
@@ -24,12 +24,12 @@ Set up the Cargo workspace scaffolding for the Image FFI Project. This iteration
 
 ### Task 2: Create `image_processor` Crate
 
-- [ ] Create directory `image_processor/src/`
-- [ ] Create `image_processor/Cargo.toml` with:
-  - [ ] Package name: `image_processor`, edition 2021
-  - [ ] Dependencies: clap (features=["derive"]), image, libloading, log, env_logger, anyhow
-- [ ] Create `image_processor/src/main.rs` with minimal `fn main()` that compiles
-- [ ] Create `image_processor/src/plugin_loader.rs` as empty stub file
+- [x] Create directory `image_processor/src/`
+- [x] Create `image_processor/Cargo.toml` with:
+  - [x] Package name: `image_processor`, edition 2021
+  - [x] Dependencies: clap (features=["derive"]), image, libloading, log, env_logger, anyhow
+- [x] Create `image_processor/src/main.rs` with minimal `fn main()` that compiles
+- [x] Create `image_processor/src/plugin_loader.rs` as empty stub file
 
 **Acceptance Criteria:**
 1. `cargo build -p image_processor` succeeds with exit code 0
@@ -40,16 +40,16 @@ Set up the Cargo workspace scaffolding for the Image FFI Project. This iteration
 
 ### Task 3: Create `mirror_plugin` Crate
 
-- [ ] Create directory `mirror_plugin/src/`
-- [ ] Create `mirror_plugin/Cargo.toml` with:
-  - [ ] Package name: `mirror_plugin`, edition 2021
-  - [ ] `crate-type = ["cdylib"]` in `[lib]` section
-  - [ ] Dependencies: serde (features=["derive"]), serde_json, log
-- [ ] Create `mirror_plugin/src/lib.rs` with stub `process_image` FFI function:
-  - [ ] Function has `#[no_mangle]` attribute
-  - [ ] Function is `pub extern "C"`
-  - [ ] Signature: `fn process_image(width: u32, height: u32, rgba_data: *mut u8, params: *const c_char)`
-  - [ ] Body is empty (no-op)
+- [x] Create directory `mirror_plugin/src/`
+- [x] Create `mirror_plugin/Cargo.toml` with:
+  - [x] Package name: `mirror_plugin`, edition 2021
+  - [x] `crate-type = ["cdylib"]` in `[lib]` section
+  - [x] Dependencies: serde (features=["derive"]), serde_json, log
+- [x] Create `mirror_plugin/src/lib.rs` with stub `process_image` FFI function:
+  - [x] Function has `#[no_mangle]` attribute
+  - [x] Function is `pub extern "C"`
+  - [x] Signature: `fn process_image(width: u32, height: u32, rgba_data: *mut u8, params: *const c_char)`
+  - [x] Body is empty (no-op)
 
 **Acceptance Criteria:**
 1. `cargo build -p mirror_plugin` succeeds with exit code 0
@@ -60,16 +60,16 @@ Set up the Cargo workspace scaffolding for the Image FFI Project. This iteration
 
 ### Task 4: Create `blur_plugin` Crate
 
-- [ ] Create directory `blur_plugin/src/`
-- [ ] Create `blur_plugin/Cargo.toml` with:
-  - [ ] Package name: `blur_plugin`, edition 2021
-  - [ ] `crate-type = ["cdylib"]` in `[lib]` section
-  - [ ] Dependencies: serde (features=["derive"]), serde_json, log
-- [ ] Create `blur_plugin/src/lib.rs` with stub `process_image` FFI function:
-  - [ ] Function has `#[no_mangle]` attribute
-  - [ ] Function is `pub extern "C"`
-  - [ ] Signature: `fn process_image(width: u32, height: u32, rgba_data: *mut u8, params: *const c_char)`
-  - [ ] Body is empty (no-op)
+- [x] Create directory `blur_plugin/src/`
+- [x] Create `blur_plugin/Cargo.toml` with:
+  - [x] Package name: `blur_plugin`, edition 2021
+  - [x] `crate-type = ["cdylib"]` in `[lib]` section
+  - [x] Dependencies: serde (features=["derive"]), serde_json, log
+- [x] Create `blur_plugin/src/lib.rs` with stub `process_image` FFI function:
+  - [x] Function has `#[no_mangle]` attribute
+  - [x] Function is `pub extern "C"`
+  - [x] Signature: `fn process_image(width: u32, height: u32, rgba_data: *mut u8, params: *const c_char)`
+  - [x] Body is empty (no-op)
 
 **Acceptance Criteria:**
 1. `cargo build -p blur_plugin` succeeds with exit code 0
@@ -80,10 +80,10 @@ Set up the Cargo workspace scaffolding for the Image FFI Project. This iteration
 
 ### Task 5: Verify Full Workspace Build
 
-- [ ] Run `cargo build` from workspace root
-- [ ] Verify all three crates compile without errors
-- [ ] Verify no compilation warnings (or only expected `dead_code` warnings for stubs)
-- [ ] Verify all expected artifacts exist in `target/debug/`
+- [x] Run `cargo build` from workspace root
+- [x] Verify all three crates compile without errors
+- [x] Verify no compilation warnings (or only expected `dead_code` warnings for stubs)
+- [x] Verify all expected artifacts exist in `target/debug/`
 
 **Acceptance Criteria:**
 1. `cargo build` exits with code 0

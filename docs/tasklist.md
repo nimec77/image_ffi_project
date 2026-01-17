@@ -6,7 +6,7 @@
 
 | # | Iteration | Status | Tested |
 |:-:|-----------|:------:|:------:|
-| 1 | Project Setup | ⬜ | ⬜ |
+| 1 | Project Setup | ✅ | ✅ |
 | 2 | CLI Arguments | ⬜ | ⬜ |
 | 3 | Image I/O | ⬜ | ⬜ |
 | 4 | Plugin Loader | ⬜ | ⬜ |
@@ -16,20 +16,20 @@
 
 **Legend**: ⬜ Pending | 🔄 In Progress | ✅ Complete | ❌ Blocked
 
-**Current Phase:** 1
+**Current Phase:** 2
 
 ---
 
 ## Iteration 1: Project Setup
 
-- [ ] Create workspace `Cargo.toml` with members
-- [ ] Create `image_processor/Cargo.toml` with dependencies
-- [ ] Create `mirror_plugin/Cargo.toml` as cdylib
-- [ ] Create `blur_plugin/Cargo.toml` as cdylib
-- [ ] Create minimal `main.rs` (hello world)
-- [ ] Create stub `lib.rs` for each plugin
+- [x] Create workspace `Cargo.toml` with members
+- [x] Create `image_processor/Cargo.toml` with dependencies
+- [x] Create `mirror_plugin/Cargo.toml` as cdylib
+- [x] Create `blur_plugin/Cargo.toml` as cdylib
+- [x] Create minimal `main.rs` (hello world)
+- [x] Create stub `lib.rs` for each plugin
 
-**Test**: `cargo build` compiles all crates
+**Test**: `cargo build` compiles all crates ✅
 
 ---
 

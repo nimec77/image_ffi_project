@@ -8,7 +8,7 @@
 |:-:|-----------|:------:|:------:|
 | 1 | Project Setup | ✅ | ✅ |
 | 2 | CLI Arguments | ✅ | ✅ |
-| 3 | Image I/O | ⬜ | ⬜ |
+| 3 | Image I/O | ✅ | ✅ |
 | 4 | Plugin Loader | ⬜ | ⬜ |
 | 5 | Mirror Plugin | ⬜ | ⬜ |
 | 6 | Blur Plugin | ⬜ | ⬜ |
@@ -16,7 +16,7 @@
 
 **Legend**: ⬜ Pending | 🔄 In Progress | ✅ Complete | ❌ Blocked
 
-**Current Phase:** 3
+**Current Phase:** 4
 
 ---
 
@@ -45,13 +45,13 @@
 
 ## Iteration 3: Image I/O
 
-- [ ] Load PNG with `image` crate
-- [ ] Convert to `RgbaImage`, extract dimensions
-- [ ] Get raw bytes as `Vec<u8>`
-- [ ] Save bytes back to PNG output
-- [ ] Add test image to `test_images/`
+- [x] Load PNG with `image` crate
+- [x] Convert to `RgbaImage`, extract dimensions
+- [x] Get raw bytes as `Vec<u8>`
+- [x] Save bytes back to PNG output
+- [x] Add test image to `test_images/`
 
-**Test**: `cargo run -- -i test.png -o out.png ...` copies image unchanged
+**Test**: `cargo run -- -i test.png -o out.png ...` copies image unchanged ✅
 
 ---
 

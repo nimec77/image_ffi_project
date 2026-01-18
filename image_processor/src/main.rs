@@ -4,6 +4,8 @@ use image::RgbaImage;
 use log::{debug, info};
 use std::path::PathBuf;
 
+mod plugin_loader;
+
 #[derive(Parser)]
 struct Args {
     /// Path to input PNG image
@@ -39,7 +41,7 @@ fn main() -> Result<()> {
 
     // Extract dimensions and raw bytes
     let (width, height) = img.dimensions();
-    let rgba_data: Vec<u8> = img.into_raw();
+    let mut rgba_data: Vec<u8> = img.into_raw();
     debug!(
         "Loaded image: {}x{} ({} bytes)",
         width,
@@ -47,9 +49,20 @@ fn main() -> Result<()> {
         rgba_data.len()
     );
 
-    // Reconstruct image from raw bytes (no processing yet)
+    // Read params file content
+    let params = std::fs::read_to_string(&args.params)
+        .with_context(|| format!("Failed to read params file: {}", args.params.display()))?;
+
+    // Build plugin library path
+    let library_name = plugin_loader::library_filename(&args.plugin);
+    let plugin_library_path = args.plugin_path.join(&library_name);
+
+    // Call plugin to process image
+    plugin_loader::process(&plugin_library_path, width, height, &mut rgba_data, &params)?;
+
+    // Reconstruct image from raw bytes
     let output_img = RgbaImage::from_raw(width, height, rgba_data)
-        .expect("Buffer size mismatch - should never happen with unchanged data");
+        .expect("Buffer size mismatch - plugin must not change buffer size");
 
     // Save output image
     output_img

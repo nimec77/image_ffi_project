@@ -50,7 +50,7 @@ image_ffi_project/
 **Data Flow**:
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        main.rs                               │
+│                        main.rs                              │
 │  1. Parse CLI args (clap)                                   │
 │  2. Load image → RgbaImage → Vec<u8>                        │
 │  3. Read params file → String                               │
@@ -60,7 +60,7 @@ image_ffi_project/
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    plugin_loader.rs                          │
+│                    plugin_loader.rs                         │
 │  pub fn process(                                            │
 │      plugin_path: &Path,                                    │
 │      width: u32,                                            │

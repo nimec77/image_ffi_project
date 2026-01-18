@@ -26,7 +26,7 @@ Set up the Cargo workspace scaffolding for the Image FFI Project. This iteration
 
 - [x] Create directory `image_processor/src/`
 - [x] Create `image_processor/Cargo.toml` with:
-  - [x] Package name: `image_processor`, edition 2021
+  - [x] Package name: `image_processor`, edition 2024
   - [x] Dependencies: clap (features=["derive"]), image, libloading, log, env_logger, anyhow
 - [x] Create `image_processor/src/main.rs` with minimal `fn main()` that compiles
 - [x] Create `image_processor/src/plugin_loader.rs` as empty stub file
@@ -42,7 +42,7 @@ Set up the Cargo workspace scaffolding for the Image FFI Project. This iteration
 
 - [x] Create directory `mirror_plugin/src/`
 - [x] Create `mirror_plugin/Cargo.toml` with:
-  - [x] Package name: `mirror_plugin`, edition 2021
+  - [x] Package name: `mirror_plugin`, edition 2024
   - [x] `crate-type = ["cdylib"]` in `[lib]` section
   - [x] Dependencies: serde (features=["derive"]), serde_json, log
 - [x] Create `mirror_plugin/src/lib.rs` with stub `process_image` FFI function:
@@ -62,7 +62,7 @@ Set up the Cargo workspace scaffolding for the Image FFI Project. This iteration
 
 - [x] Create directory `blur_plugin/src/`
 - [x] Create `blur_plugin/Cargo.toml` with:
-  - [x] Package name: `blur_plugin`, edition 2021
+  - [x] Package name: `blur_plugin`, edition 2024
   - [x] `crate-type = ["cdylib"]` in `[lib]` section
   - [x] Dependencies: serde (features=["derive"]), serde_json, log
 - [x] Create `blur_plugin/src/lib.rs` with stub `process_image` FFI function:

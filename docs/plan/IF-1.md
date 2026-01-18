@@ -103,7 +103,7 @@ resolver = "2"
 
 1. Create `image_processor/Cargo.toml`:
    - Package name: `image_processor`
-   - Edition: 2021
+   - Edition: 2024
    - Dependencies: clap (features=["derive"]), image, libloading, log, env_logger, anyhow
 
 2. Create `image_processor/src/main.rs`:
@@ -117,7 +117,7 @@ resolver = "2"
 
 1. Create `mirror_plugin/Cargo.toml`:
    - Package name: `mirror_plugin`
-   - Edition: 2021
+   - Edition: 2024
    - `crate-type = ["cdylib"]`
    - Dependencies: serde (features=["derive"]), serde_json, log
 

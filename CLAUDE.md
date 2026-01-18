@@ -11,6 +11,7 @@ CLI application for image processing with dynamically loaded plugins via FFI. Ma
 ```bash
 cargo build                    # Build all (app + plugins)
 cargo test                     # Run all tests
+cargo test -p image_processor  # Test main app
 cargo test -p mirror_plugin    # Test specific plugin
 cargo test -p blur_plugin
 cargo fmt                      # Format code

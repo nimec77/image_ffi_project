@@ -4,9 +4,9 @@
 
 ## Tasks
 
-- [ ] 2.1 Define `Args` struct with clap derive
-- [ ] 2.2 Add all 5 arguments (input, output, plugin, params, plugin-path)
-- [ ] 2.3 Print parsed arguments to verify
+- [x] 2.1 Define `Args` struct with clap derive
+- [x] 2.2 Add all 5 arguments (input, output, plugin, params, plugin-path)
+- [x] 2.3 Print parsed arguments to verify
 
 ## Acceptance Criteria
 

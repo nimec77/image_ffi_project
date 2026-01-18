@@ -1,6 +1,6 @@
 # Plan: IF-2 - CLI Arguments
 
-**Status:** DRAFT
+**Status:** PLAN_APPROVED
 
 ## Overview
 

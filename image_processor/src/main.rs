@@ -1,5 +1,7 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use clap::Parser;
+use image::RgbaImage;
+use log::{debug, info};
 use std::path::PathBuf;
 
 #[derive(Parser)]
@@ -26,13 +28,35 @@ struct Args {
 }
 
 fn main() -> Result<()> {
+    env_logger::init();
+
     let args = Args::parse();
 
-    println!("Input: {:?}", args.input);
-    println!("Output: {:?}", args.output);
-    println!("Plugin: {}", args.plugin);
-    println!("Params: {:?}", args.params);
-    println!("Plugin path: {:?}", args.plugin_path);
+    // Load PNG image and convert to RGBA8
+    let img = image::open(&args.input)
+        .with_context(|| format!("Failed to load image: {}", args.input.display()))?
+        .into_rgba8();
+
+    // Extract dimensions and raw bytes
+    let (width, height) = img.dimensions();
+    let rgba_data: Vec<u8> = img.into_raw();
+    debug!(
+        "Loaded image: {}x{} ({} bytes)",
+        width,
+        height,
+        rgba_data.len()
+    );
+
+    // Reconstruct image from raw bytes (no processing yet)
+    let output_img = RgbaImage::from_raw(width, height, rgba_data)
+        .expect("Buffer size mismatch - should never happen with unchanged data");
+
+    // Save output image
+    output_img
+        .save(&args.output)
+        .with_context(|| format!("Failed to save image: {}", args.output.display()))?;
+
+    info!("Saved image to: {}", args.output.display());
 
     Ok(())
 }

@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **IF-4: Plugin Loader** - Implemented dynamic plugin loading via FFI using `libloading`
+  - Created `plugin_loader.rs` module isolating all unsafe FFI code
+  - Platform-specific library filename construction (`.dylib`/`.so`/`.dll`)
+  - `process()` function providing safe Rust interface for plugin invocation
+  - Symbol resolution for `process_image` function with proper SAFETY documentation
+  - CString parameter marshalling for FFI calls
+  - Integration with main.rs: params file reading and plugin invocation before save
+  - Debug and info level logging for plugin loading and execution
+  - Three tests covering library filename, missing library error, and real plugin integration
+
 - **IF-3: Image I/O** - Implemented image loading and saving using the `image` crate
   - PNG loading via `image::open()` with automatic RGBA8 conversion
   - Dimension extraction via `.dimensions()` method

@@ -7,7 +7,7 @@
 | # | Iteration | Status | Tested |
 |:-:|-----------|:------:|:------:|
 | 1 | Project Setup | ✅ | ✅ |
-| 2 | CLI Arguments | ⬜ | ⬜ |
+| 2 | CLI Arguments | ✅ | ✅ |
 | 3 | Image I/O | ⬜ | ⬜ |
 | 4 | Plugin Loader | ⬜ | ⬜ |
 | 5 | Mirror Plugin | ⬜ | ⬜ |
@@ -16,7 +16,7 @@
 
 **Legend**: ⬜ Pending | 🔄 In Progress | ✅ Complete | ❌ Blocked
 
-**Current Phase:** 2
+**Current Phase:** 3
 
 ---
 
@@ -35,11 +35,11 @@
 
 ## Iteration 2: CLI Arguments
 
-- [ ] Define `Args` struct with clap derive
-- [ ] Add all 5 arguments (input, output, plugin, params, plugin-path)
-- [ ] Print parsed arguments to verify
+- [x] Define `Args` struct with clap derive
+- [x] Add all 5 arguments (input, output, plugin, params, plugin-path)
+- [x] Print parsed arguments to verify
 
-**Test**: `cargo run -- --help` shows usage
+**Test**: `cargo run -- --help` shows usage ✅
 
 ---
 

@@ -9,14 +9,14 @@
 | 1 | Project Setup | ✅ | ✅ |
 | 2 | CLI Arguments | ✅ | ✅ |
 | 3 | Image I/O | ✅ | ✅ |
-| 4 | Plugin Loader | ⬜ | ⬜ |
+| 4 | Plugin Loader | ✅ | ✅ |
 | 5 | Mirror Plugin | ⬜ | ⬜ |
 | 6 | Blur Plugin | ⬜ | ⬜ |
 | 7 | Final Polish | ⬜ | ⬜ |
 
 **Legend**: ⬜ Pending | 🔄 In Progress | ✅ Complete | ❌ Blocked
 
-**Current Phase:** 4
+**Current Phase:** 5
 
 ---
 
@@ -57,14 +57,14 @@
 
 ## Iteration 4: Plugin Loader
 
-- [ ] Create `plugin_loader.rs` module
-- [ ] Implement platform-specific library name (`.dylib`/`.so`/`.dll`)
-- [ ] Load library with `libloading`
-- [ ] Get `process_image` symbol
-- [ ] Call function with SAFETY comment
-- [ ] Pass params as `CString`
+- [x] Create `plugin_loader.rs` module
+- [x] Implement platform-specific library name (`.dylib`/`.so`/`.dll`)
+- [x] Load library with `libloading`
+- [x] Get `process_image` symbol
+- [x] Call function with SAFETY comment
+- [x] Pass params as `CString`
 
-**Test**: Load plugin, call with test image (plugin does nothing yet)
+**Test**: Load plugin, call with test image (plugin does nothing yet) ✅
 
 ---
 

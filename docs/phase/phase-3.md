@@ -4,11 +4,11 @@
 
 ## Tasks
 
-- [ ] 3.1 Load PNG with `image` crate
-- [ ] 3.2 Convert to `RgbaImage`, extract dimensions
-- [ ] 3.3 Get raw bytes as `Vec<u8>`
-- [ ] 3.4 Save bytes back to PNG output
-- [ ] 3.5 Add test image to `test_images/`
+- [x] 3.1 Load PNG with `image` crate
+- [x] 3.2 Convert to `RgbaImage`, extract dimensions
+- [x] 3.3 Get raw bytes as `Vec<u8>`
+- [x] 3.4 Save bytes back to PNG output
+- [x] 3.5 Add test image to `test_images/`
 
 ## Acceptance Criteria
 

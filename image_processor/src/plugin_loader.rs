@@ -46,18 +46,36 @@ pub fn process(
 
     info!("Loading plugin from: {}", plugin_path.display());
 
-    // SAFETY: The library path is provided by the user and we trust the library to be a valid plugin
+    // Validate buffer size before FFI call
+    let expected_len = (width as usize) * (height as usize) * 4;
+    debug_assert_eq!(
+        rgba_data.len(),
+        expected_len,
+        "Buffer size mismatch: expected {} bytes for {}x{} RGBA image, got {}",
+        expected_len,
+        width,
+        height,
+        rgba_data.len()
+    );
+
+    // SAFETY: The library path is provided by the user and we trust the library to be a valid plugin.
+    // If the library is malformed or incompatible, this could cause undefined behavior or crash.
     let lib = unsafe { Library::new(plugin_path) }
         .with_context(|| format!("Failed to load plugin library: {}", plugin_path.display()))?;
 
-    // SAFETY: The symbol name is null-terminated and we trust the library exports this symbol with the correct signature
+    // SAFETY: The symbol name is null-terminated and we trust the library exports this symbol
+    // with the correct signature. If the symbol has a different signature, calling it would
+    // cause undefined behavior due to ABI mismatch.
     let process_image_fn: libloading::Symbol<ProcessImageFn> =
         unsafe { lib.get(b"process_image\0") }
             .with_context(|| "Failed to find process_image symbol")?;
 
     let c_params = CString::new(params).with_context(|| "Invalid params string")?;
 
-    // SAFETY: The rgba_data buffer is valid for width*height*4 bytes, c_params is a valid CString pointer, and the library is loaded
+    // SAFETY: The rgba_data buffer is validated above to be width*height*4 bytes, c_params is
+    // a valid null-terminated CString, and the library remains loaded for the duration of
+    // this call. If the plugin writes beyond the buffer bounds or panics, this would cause
+    // undefined behavior.
     unsafe {
         process_image_fn(width, height, rgba_data.as_mut_ptr(), c_params.as_ptr());
     }
@@ -87,13 +105,33 @@ mod tests {
 
     #[test]
     fn test_process_missing_library_returns_error() {
-        let path = std::path::Path::new("/nonexistent/path/libfake.dylib");
+        let lib_name = library_filename("nonexistent_plugin");
+        let path = std::path::PathBuf::from("/nonexistent/path").join(&lib_name);
         let mut data = vec![0u8; 16]; // 2x2 RGBA
-        let result = process(path, 2, 2, &mut data, "{}");
+        let result = process(&path, 2, 2, &mut data, "{}");
 
         assert!(result.is_err());
         let err = result.unwrap_err().to_string();
         assert!(err.contains("Failed to load plugin library"));
+    }
+
+    #[test]
+    #[ignore] // Run with: cargo test -p image_processor -- --ignored
+    fn test_process_invalid_params_with_null_byte() {
+        // This test requires a real plugin to verify that null bytes in params
+        // are rejected before the FFI call (library loading must succeed first)
+        let lib_name = library_filename("mirror_plugin");
+        let plugin_path = std::path::PathBuf::from("../target/debug").join(&lib_name);
+        let mut data = vec![0u8; 16]; // 2x2 RGBA
+        let result = process(&plugin_path, 2, 2, &mut data, "null\0byte");
+
+        assert!(result.is_err());
+        let err = result.unwrap_err().to_string();
+        assert!(
+            err.contains("Invalid params string"),
+            "Expected 'Invalid params string' error, got: {}",
+            err
+        );
     }
 
     #[test]

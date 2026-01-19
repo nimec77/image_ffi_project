@@ -10,13 +10,13 @@
 | 2 | CLI Arguments | ✅ | ✅ |
 | 3 | Image I/O | ✅ | ✅ |
 | 4 | Plugin Loader | ✅ | ✅ |
-| 5 | Mirror Plugin | ⬜ | ⬜ |
+| 5 | Mirror Plugin | ✅ | ✅ |
 | 6 | Blur Plugin | ⬜ | ⬜ |
 | 7 | Final Polish | ⬜ | ⬜ |
 
 **Legend**: ⬜ Pending | 🔄 In Progress | ✅ Complete | ❌ Blocked
 
-**Current Phase:** 5
+**Current Phase:** 6
 
 ---
 
@@ -70,13 +70,13 @@
 
 ## Iteration 5: Mirror Plugin
 
-- [ ] Define `Params` struct (horizontal, vertical)
-- [ ] Parse JSON params with serde
-- [ ] Implement horizontal flip
-- [ ] Implement vertical flip
-- [ ] Add `test_images/mirror_params.json`
+- [x] Define `Params` struct (horizontal, vertical)
+- [x] Parse JSON params with serde
+- [x] Implement horizontal flip
+- [x] Implement vertical flip
+- [x] Add `test_images/mirror_params.json`
 
-**Test**: `cargo run -- ... --plugin mirror_plugin` flips image correctly
+**Test**: `cargo run -- ... --plugin mirror_plugin` flips image correctly ✅
 
 ---
 

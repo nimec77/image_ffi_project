@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **IF-5: Mirror Plugin** - Implemented horizontal and vertical image flipping
+  - `Params` struct with `horizontal` and `vertical` boolean fields using serde defaults
+  - Horizontal flip: swaps pixels within each row from left to right
+  - Vertical flip: swaps rows from top to bottom
+  - Combined flip produces 180-degree rotation effect
+  - Graceful error handling for invalid JSON (logs error, returns early)
+  - In-place buffer modification with O(n) time and O(1) space complexity
+  - 11 unit tests covering normal operations, edge cases (1x1, odd dimensions), and error handling
+  - Updated `test_images/mirror_params.json` with default parameters
+
 - **IF-4: Plugin Loader** - Implemented dynamic plugin loading via FFI using `libloading`
   - Created `plugin_loader.rs` module isolating all unsafe FFI code
   - Platform-specific library filename construction (`.dylib`/`.so`/`.dll`)

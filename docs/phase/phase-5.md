@@ -4,11 +4,11 @@
 
 ## Tasks
 
-- [ ] 5.1 Define `Params` struct (horizontal, vertical)
-- [ ] 5.2 Parse JSON params with serde
-- [ ] 5.3 Implement horizontal flip
-- [ ] 5.4 Implement vertical flip
-- [ ] 5.5 Add `test_images/mirror_params.json`
+- [x] 5.1 Define `Params` struct (horizontal, vertical)
+- [x] 5.2 Parse JSON params with serde
+- [x] 5.3 Implement horizontal flip
+- [x] 5.4 Implement vertical flip
+- [x] 5.5 Add `test_images/mirror_params.json`
 
 ## Acceptance Criteria
 

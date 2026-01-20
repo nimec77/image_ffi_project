@@ -8,17 +8,6 @@ This application loads PNG images, applies transformations through dynamically l
 
 ## Architecture
 
-```
-image_ffi_project/
-├── image_processor/       # Main CLI application
-│   └── src/
-│       ├── main.rs        # CLI args, image I/O
-│       └── plugin_loader.rs  # Dynamic library loading (FFI)
-├── mirror_plugin/         # Plugin: horizontal/vertical flip
-├── blur_plugin/           # Plugin: weighted average blur
-└── test_images/           # Sample images and parameter files
-```
-
 **Data Flow:**
 1. Load PNG image into RGBA buffer
 2. Load plugin shared library at runtime

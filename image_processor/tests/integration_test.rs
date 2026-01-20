@@ -6,7 +6,7 @@ use tempfile::TempDir;
 fn get_binary_path() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .parent()
-        .expect("manifest dir should have parent")
+        .expect("failed to get workspace root for binary path")
         .join("target")
         .join("debug")
         .join("image_processor")
@@ -16,7 +16,7 @@ fn get_binary_path() -> PathBuf {
 fn get_plugin_dir() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .parent()
-        .expect("manifest dir should have parent")
+        .expect("failed to get workspace root for plugin directory")
         .join("target")
         .join("debug")
 }
@@ -25,7 +25,7 @@ fn get_plugin_dir() -> PathBuf {
 fn get_test_images_dir() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .parent()
-        .expect("manifest dir should have parent")
+        .expect("failed to get workspace root for test images directory")
         .join("test_images")
 }
 

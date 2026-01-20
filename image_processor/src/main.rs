@@ -35,6 +35,7 @@ fn main() -> Result<()> {
     let args = Args::parse();
 
     // Load PNG image and convert to RGBA8
+    info!("Loading image from: {}", args.input.display());
     let img = image::open(&args.input)
         .with_context(|| format!("Failed to load image: {}", args.input.display()))?
         .into_rgba8();

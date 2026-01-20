@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **IF-6: Blur Plugin** - Implemented weighted average blur algorithm with configurable radius and iterations parameters
+  - `Params` struct with `radius` and `iterations` u32 fields using serde defaults (default: 1 each)
+  - Weighted average blur using inverse distance formula: `1.0 / (distance + 1.0)`
+  - Temporary buffer to avoid reading modified pixels during processing
+  - Multiple iterations support for progressively stronger blur effects
+  - Edge pixel handling: only averages valid neighbors within image bounds
+  - Graceful error handling for invalid JSON (logs error, returns early)
+  - Early return optimization when radius=0 or iterations=0
+  - 12 unit tests covering parameter parsing, blur algorithm, edge cases, and error handling
+  - Test parameters file `test_images/blur_params.json` with `{"radius": 3, "iterations": 1}`
+
 - **IF-5: Mirror Plugin** - Implemented horizontal and vertical image flipping
   - `Params` struct with `horizontal` and `vertical` boolean fields using serde defaults
   - Horizontal flip: swaps pixels within each row from left to right

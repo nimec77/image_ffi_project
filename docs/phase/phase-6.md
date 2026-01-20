@@ -4,11 +4,11 @@
 
 ## Tasks
 
-- [ ] 6.1 Define `Params` struct (radius, iterations)
-- [ ] 6.2 Parse JSON params with serde
-- [ ] 6.3 Implement weighted average blur algorithm
-- [ ] 6.4 Support multiple iterations
-- [ ] 6.5 Add `test_images/blur_params.json`
+- [x] 6.1 Define `Params` struct (radius, iterations)
+- [x] 6.2 Parse JSON params with serde
+- [x] 6.3 Implement weighted average blur algorithm
+- [x] 6.4 Support multiple iterations
+- [x] 6.5 Add `test_images/blur_params.json`
 
 ## Acceptance Criteria
 

@@ -11,12 +11,12 @@
 | 3 | Image I/O | ✅ | ✅ |
 | 4 | Plugin Loader | ✅ | ✅ |
 | 5 | Mirror Plugin | ✅ | ✅ |
-| 6 | Blur Plugin | ⬜ | ⬜ |
+| 6 | Blur Plugin | ✅ | ✅ |
 | 7 | Final Polish | ⬜ | ⬜ |
 
 **Legend**: ⬜ Pending | 🔄 In Progress | ✅ Complete | ❌ Blocked
 
-**Current Phase:** 6
+**Current Phase:** 7
 
 ---
 
@@ -82,13 +82,13 @@
 
 ## Iteration 6: Blur Plugin
 
-- [ ] Define `Params` struct (radius, iterations)
-- [ ] Parse JSON params with serde
-- [ ] Implement weighted average blur algorithm
-- [ ] Support multiple iterations
-- [ ] Add `test_images/blur_params.json`
+- [x] Define `Params` struct (radius, iterations)
+- [x] Parse JSON params with serde
+- [x] Implement weighted average blur algorithm
+- [x] Support multiple iterations
+- [x] Add `test_images/blur_params.json`
 
-**Test**: `cargo run -- ... --plugin blur_plugin` blurs image correctly
+**Test**: `cargo run -- ... --plugin blur_plugin` blurs image correctly ✅
 
 ---
 

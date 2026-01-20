@@ -75,3 +75,15 @@ Context: PRD `docs/prd/IF-7.prd.md`; plan `docs/plan/IF-7.md`
   - Run `cargo test` and confirm all existing tests pass
   - Verify test count: 8 CLI tests, 4 plugin loader tests, 14 mirror tests, 13 blur tests
   - **Acceptance:** `cargo test` reports 39 tests passing (2 ignored)
+
+## Review Fixes
+
+- [x] **RF1: Remove duplicate architecture diagram from README**
+  - The project structure is shown twice in README.md - once in the "Architecture" section and again in the "Project Structure" section
+  - Remove the duplicate from the "Architecture" section, keeping only the detailed version in "Project Structure"
+  - **Acceptance:** README.md contains only one project structure diagram
+
+- [x] **RF2: Improve integration test helper .expect() messages**
+  - Update `.expect()` messages in `integration_test.rs` helper functions to be more specific
+  - Change "manifest dir should have parent" to describe which specific operation failed
+  - **Acceptance:** All `.expect()` messages in test helpers clearly describe the failed operation

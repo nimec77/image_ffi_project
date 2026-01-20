@@ -112,6 +112,7 @@ pub unsafe extern "C" fn process_image(
 }
 
 #[cfg(test)]
+#[allow(clippy::identity_op)] // Allow (row * width + col) for readability
 mod tests {
     use super::*;
     use std::ffi::CString;

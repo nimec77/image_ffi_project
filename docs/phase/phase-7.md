@@ -4,11 +4,11 @@
 
 ## Tasks
 
-- [ ] 7.1 Add logging (`env_logger::init()`, log macros)
-- [ ] 7.2 Verify all error paths return `anyhow::Result`
-- [ ] 7.3 Add unit tests for plugin logic
-- [ ] 7.4 Add integration test for full workflow
-- [ ] 7.5 Update README.md
+- [x] 7.1 Add logging (`env_logger::init()`, log macros)
+- [x] 7.2 Verify all error paths return `anyhow::Result`
+- [x] 7.3 Add unit tests for plugin logic
+- [x] 7.4 Add integration test for full workflow
+- [x] 7.5 Update README.md
 
 ## Acceptance Criteria
 

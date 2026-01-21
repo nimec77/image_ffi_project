@@ -68,6 +68,18 @@ See `docs/conventions.md` for complete rules. Key points:
 - **Dependencies**: Only clap, image, libloading, log, env_logger, anyhow, serde/serde_json
 - **Plugin safety**: In-place modification only, never exceed `width * height * 4` bytes, never panic across FFI
 
+## AI-Driven Workflow
+
+This project uses an AI-driven feature development workflow with quality gates. Key commands:
+
+```bash
+/feature-development IF-N "Title" docs/phase/phase-N.md  # Full workflow
+/validate IF-N                                            # Check gate status
+/implement-orchestrated IF-N                              # Implement tasks
+```
+
+Active ticket stored in `docs/.active_ticket`. Artifacts in `docs/prd/`, `docs/plan/`, `docs/tasklist/`, `reports/qa/`.
+
 ## Reference Documentation
 
 - `docs/idea.md` - Requirements and pre-submission checklist

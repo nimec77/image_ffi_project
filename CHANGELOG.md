@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **IF-7: Final Polish** - Added integration tests and README documentation
+  - Integration test suite in `image_processor/tests/integration_test.rs` with 6 end-to-end tests
+  - Positive workflow tests for mirror and blur plugins verifying exit status, file creation, and dimension preservation
+  - Error handling tests for missing input file, missing plugin, and missing params file
+  - Comprehensive `README.md` with project overview, build instructions, usage examples, and project structure
+  - Added info-level log message for image loading: "Loading image from: <path>"
+  - Dev-dependencies `tempfile` and `image` for integration test support
+
 - **IF-6: Blur Plugin** - Implemented weighted average blur algorithm with configurable radius and iterations parameters
   - `Params` struct with `radius` and `iterations` u32 fields using serde defaults (default: 1 each)
   - Weighted average blur using inverse distance formula: `1.0 / (distance + 1.0)`

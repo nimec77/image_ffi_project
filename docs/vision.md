@@ -128,7 +128,7 @@ pub extern "C" fn process_image(
     height: u32,
     rgba_data: *mut u8,
     params: *const c_char,
-)
+) -> i32  // Returns 0 on success, negative error code on failure
 ```
 
 **Plugin Structure** (each plugin):
@@ -147,7 +147,7 @@ pub extern "C" fn process_image(
     height: u32,
     rgba_data: *mut u8,
     params: *const c_char,
-) {
+) -> i32 {
     // SAFETY: params is a valid C string from the host
     let params_str = unsafe { CStr::from_ptr(params) }.to_str().unwrap_or("");
 
@@ -155,7 +155,7 @@ pub extern "C" fn process_image(
         Ok(p) => p,
         Err(e) => {
             log::error!("Failed to parse params: {}", e);
-            return; // Do nothing on invalid params
+            return -1; // Parse error
         }
     };
 
@@ -164,6 +164,8 @@ pub extern "C" fn process_image(
     let data = unsafe { std::slice::from_raw_parts_mut(rgba_data, len) };
 
     // Process data in-place...
+
+    0 // Success
 }
 ```
 

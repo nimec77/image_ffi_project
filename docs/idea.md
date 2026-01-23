@@ -67,13 +67,15 @@ Pass the following to the plugin:
 All plugins must export a single function with the following C signature:
 
 ```c
-void process_image(
+int32_t process_image(
     uint32_t width,
     uint32_t height,
     uint8_t* rgba_data,
     const char* params
 );
 ```
+
+Returns `0` on success, negative error code on failure.
 
 ### Parameter Description
 

@@ -2,6 +2,14 @@ use log::error;
 use serde::Deserialize;
 use std::ffi::{CStr, c_char};
 
+/// Error codes returned by the mirror plugin.
+#[repr(i32)]
+pub enum MirrorError {
+    Success = 0,
+    ParseError = -1,
+    SizeOverflow = -2,
+}
+
 #[derive(Deserialize)]
 struct Params {
     #[serde(default)]
@@ -24,7 +32,7 @@ pub unsafe extern "C" fn process_image(
     height: u32,
     rgba_data: *mut u8,
     params: *const c_char,
-) {
+) -> i32 {
     // SAFETY: params is a valid null-terminated C string passed by the host.
     // The plugin loader guarantees this pointer is valid for the duration of this call.
     let params_str = unsafe { CStr::from_ptr(params) }.to_str().unwrap_or("");
@@ -34,18 +42,27 @@ pub unsafe extern "C" fn process_image(
         Ok(p) => p,
         Err(e) => {
             error!("mirror_plugin: failed to parse params JSON: {}", e);
-            return;
+            return MirrorError::ParseError as i32;
         }
     };
 
     // Early return if no flip requested
     if !params.horizontal && !params.vertical {
-        return;
+        return MirrorError::Success as i32;
     }
 
-    let width = width as usize;
-    let height = height as usize;
-    let len = width * height * 4;
+    let width_usize = width as usize;
+    let height_usize = height as usize;
+    let len = match width_usize
+        .checked_mul(height_usize)
+        .and_then(|n| n.checked_mul(4))
+    {
+        Some(len) => len,
+        None => {
+            error!("mirror_plugin: size overflow calculating buffer length");
+            return MirrorError::SizeOverflow as i32;
+        }
+    };
 
     // SAFETY: rgba_data is a valid pointer to a buffer of exactly width * height * 4 bytes,
     // owned by the host. The plugin loader guarantees this buffer is valid and properly
@@ -54,10 +71,10 @@ pub unsafe extern "C" fn process_image(
 
     // Horizontal flip: swap pixels within each row
     if params.horizontal {
-        for y in 0..height {
-            for x in 0..width / 2 {
-                let left_idx = (y * width + x) * 4;
-                let right_idx = (y * width + (width - 1 - x)) * 4;
+        for y in 0..height_usize {
+            for x in 0..width_usize / 2 {
+                let left_idx = (y * width_usize + x) * 4;
+                let right_idx = (y * width_usize + (width_usize - 1 - x)) * 4;
                 // Swap 4 bytes (RGBA) at a time
                 for i in 0..4 {
                     data.swap(left_idx + i, right_idx + i);
@@ -68,16 +85,24 @@ pub unsafe extern "C" fn process_image(
 
     // Vertical flip: swap rows
     if params.vertical {
-        let row_bytes = width * 4;
-        for y in 0..height / 2 {
+        let row_bytes = match width_usize.checked_mul(4) {
+            Some(rb) => rb,
+            None => {
+                error!("mirror_plugin: size overflow calculating row bytes");
+                return MirrorError::SizeOverflow as i32;
+            }
+        };
+        for y in 0..height_usize / 2 {
             let top_start = y * row_bytes;
-            let bottom_start = (height - 1 - y) * row_bytes;
+            let bottom_start = (height_usize - 1 - y) * row_bytes;
             // Swap each byte in the row
             for i in 0..row_bytes {
                 data.swap(top_start + i, bottom_start + i);
             }
         }
     }
+
+    MirrorError::Success as i32
 }
 
 #[cfg(test)]
@@ -85,12 +110,13 @@ mod tests {
     use super::*;
     use std::ffi::CString;
 
-    /// Helper function to call process_image with test data
-    fn call_process_image(width: u32, height: u32, data: &mut [u8], params_json: &str) {
+    /// Helper function to call process_image with test data.
+    /// Returns the error code from the plugin.
+    fn call_process_image(width: u32, height: u32, data: &mut [u8], params_json: &str) -> i32 {
         let params = CString::new(params_json).expect("CString creation failed");
         // SAFETY: data is a valid slice with length >= width * height * 4,
         // and params is a valid null-terminated C string.
-        unsafe { process_image(width, height, data.as_mut_ptr(), params.as_ptr()) };
+        unsafe { process_image(width, height, data.as_mut_ptr(), params.as_ptr()) }
     }
 
     /// Creates a 4x4 test image where each pixel has a unique value based on position.
@@ -282,9 +308,10 @@ mod tests {
         let mut data = create_4x4_test_image();
         let original = data.clone();
 
-        // Invalid JSON should result in early return without modifying the image
-        call_process_image(4, 4, &mut data, "not valid json {{{");
+        // Invalid JSON should result in ParseError without modifying the image
+        let result = call_process_image(4, 4, &mut data, "not valid json {{{");
 
+        assert_eq!(result, MirrorError::ParseError as i32);
         assert_eq!(data, original);
     }
 
@@ -309,5 +336,24 @@ mod tests {
         // Should be horizontally flipped
         assert_eq!(get_pixel(&data, 4, 0, 0), (3, 0, 3, 255));
         assert_eq!(get_pixel(&data, 4, 3, 0), (0, 0, 0, 255));
+    }
+
+    #[test]
+    fn test_returns_success_on_valid_params() {
+        let mut data = create_4x4_test_image();
+        let result = call_process_image(4, 4, &mut data, r#"{"horizontal": true}"#);
+        assert_eq!(result, MirrorError::Success as i32);
+    }
+
+    #[test]
+    fn test_returns_success_when_no_flip() {
+        let mut data = create_4x4_test_image();
+        let result = call_process_image(
+            4,
+            4,
+            &mut data,
+            r#"{"horizontal": false, "vertical": false}"#,
+        );
+        assert_eq!(result, MirrorError::Success as i32);
     }
 }

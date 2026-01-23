@@ -2,6 +2,15 @@ use log::error;
 use serde::Deserialize;
 use std::ffi::{CStr, c_char};
 
+/// Error codes returned by the blur plugin.
+#[repr(i32)]
+pub enum BlurError {
+    Success = 0,
+    ParseError = -1,
+    SizeOverflow = -2,
+    InvalidRadius = -3,
+}
+
 #[derive(Deserialize)]
 struct Params {
     #[serde(default = "default_radius")]
@@ -32,7 +41,7 @@ pub unsafe extern "C" fn process_image(
     height: u32,
     rgba_data: *mut u8,
     params: *const c_char,
-) {
+) -> i32 {
     // SAFETY: params is a valid null-terminated C string passed by the host.
     // The plugin loader guarantees this pointer is valid for the duration of this call.
     let params_str = unsafe { CStr::from_ptr(params) }.to_str().unwrap_or("");
@@ -41,19 +50,34 @@ pub unsafe extern "C" fn process_image(
         Ok(p) => p,
         Err(e) => {
             error!("blur_plugin: failed to parse params JSON: {}", e);
-            return;
+            return BlurError::ParseError as i32;
         }
     };
 
     // Early return if no blur needed
     if params.radius == 0 || params.iterations == 0 {
-        return;
+        return BlurError::Success as i32;
     }
 
-    let width = width as usize;
-    let height = height as usize;
-    let len = width * height * 4;
-    let radius = params.radius as i32;
+    let width_usize = width as usize;
+    let height_usize = height as usize;
+    let len = match width_usize
+        .checked_mul(height_usize)
+        .and_then(|n| n.checked_mul(4))
+    {
+        Some(len) => len,
+        None => {
+            error!("blur_plugin: size overflow calculating buffer length");
+            return BlurError::SizeOverflow as i32;
+        }
+    };
+    let radius: i32 = match params.radius.try_into() {
+        Ok(r) => r,
+        Err(_) => {
+            error!("blur_plugin: radius {} exceeds i32::MAX", params.radius);
+            return BlurError::InvalidRadius as i32;
+        }
+    };
 
     // SAFETY: rgba_data is a valid pointer to a buffer of exactly width * height * 4 bytes,
     // owned by the host. The plugin loader guarantees this buffer is valid and properly
@@ -66,8 +90,8 @@ pub unsafe extern "C" fn process_image(
     // Apply blur for the specified number of iterations
     for _ in 0..params.iterations {
         // For each pixel, compute weighted average of neighbors within radius
-        for cy in 0..height {
-            for cx in 0..width {
+        for cy in 0..height_usize {
+            for cx in 0..width_usize {
                 let mut weight_sum = 0.0_f64;
                 let mut color_sum = [0.0_f64; 4]; // R, G, B, A
 
@@ -78,7 +102,8 @@ pub unsafe extern "C" fn process_image(
                         let ny = cy as i32 + dy;
 
                         // Check bounds
-                        if nx >= 0 && nx < width as i32 && ny >= 0 && ny < height as i32 {
+                        if nx >= 0 && nx < width_usize as i32 && ny >= 0 && ny < height_usize as i32
+                        {
                             let nx = nx as usize;
                             let ny = ny as usize;
 
@@ -89,7 +114,7 @@ pub unsafe extern "C" fn process_image(
                             weight_sum += weight;
 
                             // Accumulate weighted color values
-                            let neighbor_idx = (ny * width + nx) * 4;
+                            let neighbor_idx = (ny * width_usize + nx) * 4;
                             for channel in 0..4 {
                                 color_sum[channel] += weight * data[neighbor_idx + channel] as f64;
                             }
@@ -98,7 +123,7 @@ pub unsafe extern "C" fn process_image(
                 }
 
                 // Store weighted average in temp buffer
-                let pixel_idx = (cy * width + cx) * 4;
+                let pixel_idx = (cy * width_usize + cx) * 4;
                 for channel in 0..4 {
                     temp_buffer[pixel_idx + channel] =
                         (color_sum[channel] / weight_sum).round() as u8;
@@ -109,6 +134,8 @@ pub unsafe extern "C" fn process_image(
         // Copy temp buffer back to original data
         data.copy_from_slice(&temp_buffer);
     }
+
+    BlurError::Success as i32
 }
 
 #[cfg(test)]
@@ -149,11 +176,13 @@ mod tests {
         assert_eq!(params.iterations, 3);
     }
 
-    fn blur_image(data: &mut [u8], width: u32, height: u32, params_json: &str) {
+    /// Helper function to call process_image with test data.
+    /// Returns the error code from the plugin.
+    fn blur_image(data: &mut [u8], width: u32, height: u32, params_json: &str) -> i32 {
         let c_params = CString::new(params_json).expect("CString creation failed");
         // SAFETY: data is a valid slice with length >= width * height * 4,
         // and c_params is a valid null-terminated C string.
-        unsafe { process_image(width, height, data.as_mut_ptr(), c_params.as_ptr()) };
+        unsafe { process_image(width, height, data.as_mut_ptr(), c_params.as_ptr()) }
     }
 
     fn create_4x4_sharp_edge() -> Vec<u8> {
@@ -280,8 +309,9 @@ mod tests {
         let mut data = create_4x4_sharp_edge();
         let original = data.clone();
 
-        blur_image(&mut data, 4, 4, "not valid json {{{");
+        let result = blur_image(&mut data, 4, 4, "not valid json {{{");
 
+        assert_eq!(result, BlurError::ParseError as i32);
         assert_eq!(
             data, original,
             "Image should not be modified on invalid JSON"
@@ -299,5 +329,36 @@ mod tests {
             data, original,
             "Empty JSON should apply defaults and blur the image"
         );
+    }
+
+    #[test]
+    fn test_invalid_radius_too_large() {
+        let mut data = create_4x4_sharp_edge();
+        let original = data.clone();
+
+        // u32::MAX (4294967295) exceeds i32::MAX (2147483647)
+        let result = blur_image(
+            &mut data,
+            4,
+            4,
+            r#"{"radius": 4294967295, "iterations": 1}"#,
+        );
+
+        assert_eq!(result, BlurError::InvalidRadius as i32);
+        assert_eq!(data, original);
+    }
+
+    #[test]
+    fn test_returns_success_on_valid_params() {
+        let mut data = create_4x4_sharp_edge();
+        let result = blur_image(&mut data, 4, 4, r#"{"radius": 1, "iterations": 1}"#);
+        assert_eq!(result, BlurError::Success as i32);
+    }
+
+    #[test]
+    fn test_returns_success_when_zero_radius() {
+        let mut data = create_4x4_sharp_edge();
+        let result = blur_image(&mut data, 4, 4, r#"{"radius": 0, "iterations": 1}"#);
+        assert_eq!(result, BlurError::Success as i32);
     }
 }

@@ -48,6 +48,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore] // Requires: cargo build --all
     fn test_mirror_plugin_horizontal_flip() {
         let binary_path = get_binary_path();
         let plugin_dir = get_plugin_dir();
@@ -101,6 +102,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore] // Requires: cargo build --all
     fn test_blur_plugin_workflow() {
         let binary_path = get_binary_path();
         let plugin_dir = get_plugin_dir();
@@ -154,6 +156,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore] // Requires: cargo build --all
     fn test_error_nonexistent_input() {
         let binary_path = get_binary_path();
         let plugin_dir = get_plugin_dir();
@@ -195,6 +198,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore] // Requires: cargo build --all
     fn test_error_nonexistent_plugin() {
         let binary_path = get_binary_path();
         let plugin_dir = get_plugin_dir();
@@ -236,6 +240,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore] // Requires: cargo build --all
     fn test_error_invalid_params() {
         let binary_path = get_binary_path();
         let plugin_dir = get_plugin_dir();

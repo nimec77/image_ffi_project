@@ -5,7 +5,7 @@ use anyhow::{Context, Result};
 use libloading::Library;
 use log::{debug, info};
 
-type ProcessImageFn = unsafe extern "C" fn(u32, u32, *mut u8, *const c_char);
+type ProcessImageFn = unsafe extern "C" fn(u32, u32, *mut u8, *const c_char) -> i32;
 
 /// Returns the platform-specific library filename for a plugin.
 pub(crate) fn library_filename(plugin_name: &str) -> String {
@@ -46,8 +46,11 @@ pub fn process(
 
     info!("Loading plugin from: {}", plugin_path.display());
 
-    // Validate buffer size before FFI call
-    let expected_len = (width as usize) * (height as usize) * 4;
+    // Validate buffer size before FFI call with checked arithmetic
+    let expected_len = (width as usize)
+        .checked_mul(height as usize)
+        .and_then(|n| n.checked_mul(4))
+        .ok_or_else(|| anyhow::anyhow!("Image dimensions overflow"))?;
     debug_assert_eq!(
         rgba_data.len(),
         expected_len,
@@ -76,8 +79,11 @@ pub fn process(
     // a valid null-terminated CString, and the library remains loaded for the duration of
     // this call. If the plugin writes beyond the buffer bounds or panics, this would cause
     // undefined behavior.
-    unsafe {
-        process_image_fn(width, height, rgba_data.as_mut_ptr(), c_params.as_ptr());
+    let result =
+        unsafe { process_image_fn(width, height, rgba_data.as_mut_ptr(), c_params.as_ptr()) };
+
+    if result != 0 {
+        anyhow::bail!("Plugin returned error code: {}", result);
     }
 
     info!("Plugin execution complete");

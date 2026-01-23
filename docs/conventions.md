@@ -53,7 +53,7 @@ pub extern "C" fn process_image(
     height: u32,
     rgba_data: *mut u8,
     params: *const c_char,
-)
+) -> i32  // Returns 0 on success, negative error code on failure
 ```
 
 ## Plugin Rules
